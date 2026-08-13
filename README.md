@@ -1,4 +1,4 @@
-<img width="2561" height="1601" alt="image" src="https://github.com/user-attachments/assets/3cd58b33-5635-4d3f-bf30-66942ee5d793" />
+<img width="1208.5" height="800.5" alt="image" src="https://github.com/user-attachments/assets/3cd58b33-5635-4d3f-bf30-66942ee5d793" />
 
 
 Larpaper is a fullscreen terminal screensaver built with Kitty, Terminal Text
