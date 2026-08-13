@@ -31,12 +31,12 @@ mkdir -p ~/.local/share/larpaper
 mkdir -p ~/.local/share/applications
 mkdir -p ~/.config/autostart
 
-install -m 755 src/larpaper.sh ~/.local/bin/larpaper
-install -m 755 src/launch-larpaper.sh ~/.local/bin/launch-larpaper
-install -m 755 src/larpaper-idle.sh ~/.local/bin/larpaper-idle
-install -m 644 assets/art.txt ~/.local/share/larpaper/art.txt
-install -m 644 desktop/larpaper.desktop ~/.local/share/applications/larpaper.desktop
-install -m 644 desktop/larpaper-idle.desktop ~/.config/autostart/larpaper-idle.desktop
+install -m 755 larpaper.sh ~/.local/bin/larpaper
+install -m 755 launch-larpaper.sh ~/.local/bin/launch-larpaper
+install -m 755 larpaper-idle.sh ~/.local/bin/larpaper-idle
+install -m 644 art.txt ~/.local/share/larpaper/art.txt
+install -m 644 larpaper.desktop ~/.local/share/applications/larpaper.desktop
+install -m 644 larpaper-idle.desktop ~/.config/autostart/larpaper-idle.desktop
 ```
 
 Make sure `~/.local/bin` is in your `PATH`. You can then preview Larpaper with:
@@ -50,13 +50,8 @@ start the new autostart entry immediately, or run `larpaper-idle` yourself.
 
 ## Project layout
 
-```text
-larpaper/
-├── assets/       Default ASCII artwork
-├── src/          Bash source for the screensaver, launcher, and idle watcher
-├── desktop/      Application and KDE autostart entries
-└── README.md
-```
+The repository is intentionally flat: its Bash source, artwork, and desktop
+entries are all in the project root.
 
-Edit `assets/art.txt` to customize the artwork in a clone. After installation,
+Edit `art.txt` to customize the artwork in a clone. After installation,
 the installed copy is at `~/.local/share/larpaper/art.txt`.

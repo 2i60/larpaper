@@ -3,7 +3,7 @@
 set -u
 
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-repo_art_file="$script_dir/../assets/art.txt"
+repo_art_file="$script_dir/art.txt"
 installed_art_file="${XDG_DATA_HOME:-$HOME/.local/share}/larpaper/art.txt"
 
 if [[ -r "$repo_art_file" ]]; then
