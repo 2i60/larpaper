@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Larpaper Idle Watcher
+Comment=Start Larpaper after five minutes of inactivity
+Exec=larpaper-idle
+Icon=preferences-desktop-screensaver
+Terminal=false
+OnlyShowIn=KDE;
+X-KDE-autostart-after=panel

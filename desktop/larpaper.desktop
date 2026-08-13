@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Larpaper
+Comment=Terminal Text Effects screensaver
+Exec=launch-larpaper
+Icon=utilities-terminal
+Terminal=false
+Categories=Utility;
