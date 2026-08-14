@@ -19,6 +19,26 @@ if [[ ! -r "$art_file" ]]; then
   exit 1
 fi
 
+wait_for_terminal_size() {
+  local previous current stable=0 attempts=0
+
+  sleep 0.1
+  previous="$(stty size 2>/dev/null || true)"
+  [[ -n "$previous" ]] || return 0
+  while (( attempts < 18 && stable < 8 )); do
+    sleep 0.05
+    current="$(stty size 2>/dev/null || true)"
+
+    if [[ -n "$current" && "$current" == "$previous" ]]; then
+      (( stable += 1 ))
+    else
+      stable=0
+      previous="$current"
+    fi
+    (( attempts += 1 ))
+  done
+}
+
 cleanup() {
   [[ -n "${activity_pid:-}" ]] && kill "$activity_pid" 2>/dev/null || true
   [[ -n "${renderer_pid:-}" ]] && kill "$renderer_pid" 2>/dev/null || true
@@ -30,6 +50,7 @@ trap 'exit 0' INT TERM HUP
 
 printf '\033[?25l\033[2J\033[H'
 stty -echo 2>/dev/null || true
+wait_for_terminal_size
 
 (
   effect_pid=""
