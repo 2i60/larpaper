@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Uninstall Larpaper
+Comment=Remove the Larpaper release installation
+Exec=uninstall-larpaper
+Icon=edit-delete
+Terminal=true
+Categories=Utility;

@@ -1,0 +1,112 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+repo_url="https://raw.githubusercontent.com/2i60/larpaper/main"
+script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+terminal_session="${LARPAPER_INSTALL_TERMINAL:-0}"
+assume_yes=0
+[[ "${1:-}" == "--yes" ]] && assume_yes=1
+
+if [[ "$terminal_session" != 1 && ! -t 1 ]]; then
+  if command -v kitty >/dev/null 2>&1; then
+    exec kitty --title 'Install Larpaper' env LARPAPER_INSTALL_TERMINAL=1 bash "$0" "$@"
+  fi
+  printf 'Run this installer in a terminal (Kitty was not found).\n' >&2
+  exit 1
+fi
+
+pause_before_close() {
+  if [[ -n "${download_dir:-}" && -d "$download_dir" ]]; then
+    find "$download_dir" -type f -delete
+    rmdir -- "$download_dir" 2>/dev/null || true
+  fi
+  if [[ "$terminal_session" == 1 ]]; then
+    printf '\nPress Enter to close this window.'
+    IFS= read -r _ || true
+  fi
+}
+trap pause_before_close EXIT
+
+required_sources=(
+  larpaper.sh
+  launch-larpaper.sh
+  larpaper-idle.sh
+  uninstall-larpaper.sh
+  larpaper.conf
+  art.txt
+  larpaper.desktop
+  larpaper-idle.desktop
+  uninstall-larpaper.desktop
+)
+
+printf '\nLarpaper release installer\n\n'
+printf 'Checking release sources...\n'
+
+download_dir=""
+declare -A sources=()
+for name in "${required_sources[@]}"; do
+  if [[ -r "$script_dir/$name" ]]; then
+    sources["$name"]="$script_dir/$name"
+  else
+    if [[ -z "$download_dir" ]]; then
+      command -v curl >/dev/null 2>&1 || {
+        printf 'curl is required to download missing sources.\n' >&2
+        exit 1
+      }
+      download_dir="$(mktemp -d "${TMPDIR:-/tmp}/larpaper-install.XXXXXX")"
+    fi
+    printf '  downloading %s...\n' "$name"
+    curl --fail --location --silent --show-error \
+      "$repo_url/$name" --output "$download_dir/$name"
+    sources["$name"]="$download_dir/$name"
+  fi
+  printf '  [ok] %s\n' "$name"
+done
+
+for command_name in kitty tte swayidle flock; do
+  if command -v "$command_name" >/dev/null 2>&1; then
+    printf '  [ok] command: %s\n' "$command_name"
+  else
+    printf 'Missing required command: %s\n' "$command_name" >&2
+    exit 1
+  fi
+done
+
+printf '\nInstall Larpaper for user %s? [y/N] ' "${USER:-$(id -un)}"
+if (( assume_yes )); then
+  printf 'yes\n'
+else
+  IFS= read -r answer
+  [[ "$answer" =~ ^[Yy]([Ee][Ss])?$ ]] || {
+    printf 'Installation cancelled.\n'
+    exit 0
+  }
+fi
+
+bin_home="${XDG_BIN_HOME:-$HOME/.local/bin}"
+data_home="${XDG_DATA_HOME:-$HOME/.local/share}"
+config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
+
+printf '\nInstalling commands...\n'
+install -d "$bin_home"
+install -m 755 "${sources[larpaper.sh]}" "$bin_home/larpaper"
+install -m 755 "${sources[launch-larpaper.sh]}" "$bin_home/launch-larpaper"
+install -m 755 "${sources[larpaper-idle.sh]}" "$bin_home/larpaper-idle"
+install -m 755 "${sources[uninstall-larpaper.sh]}" "$bin_home/uninstall-larpaper"
+
+printf 'Installing configuration...\n'
+install -d "$config_home/larpaper"
+[[ -e "$config_home/larpaper/larpaper.conf" ]] || \
+  install -m 644 "${sources[larpaper.conf]}" "$config_home/larpaper/larpaper.conf"
+[[ -e "$config_home/larpaper/art.txt" ]] || \
+  install -m 644 "${sources[art.txt]}" "$config_home/larpaper/art.txt"
+
+printf 'Installing application entries...\n'
+install -d "$data_home/applications" "$config_home/autostart"
+install -m 644 "${sources[larpaper.desktop]}" "$data_home/applications/larpaper.desktop"
+install -m 644 "${sources[uninstall-larpaper.desktop]}" "$data_home/applications/uninstall-larpaper.desktop"
+install -m 644 "${sources[larpaper-idle.desktop]}" "$config_home/autostart/larpaper-idle.desktop"
+
+printf '\nInstallation complete. Your existing config and artwork were preserved.\n\n'
+cat "$config_home/larpaper/art.txt"

@@ -20,6 +20,10 @@ it, and run the included quick installer:
 ./quick-setup
 ```
 
+The installer opens in a terminal when launched graphically, verifies every
+required source file, downloads any missing files, and asks before installing.
+It reports each step and displays the configured Larpaper artwork when done.
+
 ## Set up from source
 
 larpaper is written entirely in bash, so it's pretty straightforward: Download or clone
@@ -67,6 +71,9 @@ Release archives include an uninstaller. Run:
 ```bash
 uninstall-larpaper
 ```
+
+You can also choose **Uninstall Larpaper** from the application menu. It opens
+a terminal, explains what will be removed, and asks for confirmation.
 
 This stops Larpaper and its idle watcher, then removes only files installed by
 the release. It does not remove source checkouts or unrelated Kitty, `tte`, or
