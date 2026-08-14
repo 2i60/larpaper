@@ -3,21 +3,25 @@
 set -u
 
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-repo_art_file="$script_dir/art.txt"
-installed_art_file="${XDG_DATA_HOME:-$HOME/.local/share}/larpaper/art.txt"
+repo_config="$script_dir/larpaper.conf"
+installed_config="${XDG_CONFIG_HOME:-$HOME/.config}/larpaper/larpaper.conf"
+[[ -r "$repo_config" ]] && config_file="$repo_config" || config_file="$installed_config"
 
-if [[ -r "$repo_art_file" ]]; then
-  art_file="$repo_art_file"
-else
-  art_file="$installed_art_file"
+if [[ ! -r "$config_file" ]]; then
+  printf 'Larpaper config is missing: %s\n' "$config_file" >&2
+  exit 1
 fi
-showoff=0
-[[ "${1:-}" == "--showoff" ]] && showoff=1
 
+# shellcheck source=larpaper.conf
+source "$config_file"
+
+art_file="$(dirname -- "$config_file")/art.txt"
 if [[ ! -r "$art_file" ]]; then
   printf 'Larpaper artwork is missing: %s\n' "$art_file" >&2
   exit 1
 fi
+showoff=0
+[[ "${1:-}" == "--showoff" ]] && showoff=1
 
 wait_for_terminal_size() {
   local previous current stable=0 attempts=0
@@ -58,18 +62,18 @@ wait_for_terminal_size
   while :; do
     printf '\033[2J\033[H'
     tte --input-file "$art_file" \
-      --random-effect \
-      --frame-rate 120 \
-      --canvas-width 0 \
-      --canvas-height 0 \
-      --anchor-canvas c \
-      --anchor-text c \
+      "${TTE_EFFECT_ARGS[@]}" \
+      --frame-rate "$FRAME_RATE" \
+      --canvas-width "$CANVAS_WIDTH" \
+      --canvas-height "$CANVAS_HEIGHT" \
+      --anchor-canvas "$ANCHOR_CANVAS" \
+      --anchor-text "$ANCHOR_TEXT" \
       --no-eol \
       --no-restore-cursor </dev/null &
     effect_pid=$!
     wait "$effect_pid" || true
     effect_pid=""
-    sleep 1
+    sleep "$EFFECT_PAUSE"
   done
 ) &
 renderer_pid=$!

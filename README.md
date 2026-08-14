@@ -27,14 +27,15 @@ the source code, then install the files manually:
 
 ```bash
 mkdir -p ~/.local/bin
-mkdir -p ~/.local/share/larpaper
 mkdir -p ~/.local/share/applications
 mkdir -p ~/.config/autostart
+mkdir -p ~/.config/larpaper
 
 install -m 755 larpaper.sh ~/.local/bin/larpaper
 install -m 755 launch-larpaper.sh ~/.local/bin/launch-larpaper
 install -m 755 larpaper-idle.sh ~/.local/bin/larpaper-idle
-install -m 644 art.txt ~/.local/share/larpaper/art.txt
+install -m 644 larpaper.conf ~/.config/larpaper/larpaper.conf
+install -m 644 art.txt ~/.config/larpaper/art.txt
 install -m 644 larpaper.desktop ~/.local/share/applications/larpaper.desktop
 install -m 644 larpaper-idle.desktop ~/.config/autostart/larpaper-idle.desktop
 ```
@@ -48,5 +49,25 @@ launch-larpaper --showoff
 The KDE idle watcher starts larpaper after five minutes. Log out and back in to
 start the new autostart entry immediately, or run `larpaper-idle` yourself.
 
-Edit `art.txt` to customize the artwork in a clone. After installation,
-the installed copy is at `~/.local/share/larpaper/art.txt`.
+## Configuration
+
+Release installs keep both editable files together in `~/.config/larpaper/`:
+
+- `larpaper.conf` controls the idle timeout, window appearance, and Terminal
+  Text Effects settings.
+- `art.txt` contains the artwork displayed by Larpaper.
+
+When running from a source checkout, edit the copies beside the scripts in the
+repository instead.
+
+## Uninstall a release
+
+Release archives include an uninstaller. Run:
+
+```bash
+uninstall-larpaper
+```
+
+This stops Larpaper and its idle watcher, then removes only files installed by
+the release. It does not remove source checkouts or unrelated Kitty, `tte`, or
+`swayidle` installations.
