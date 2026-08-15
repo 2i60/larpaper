@@ -1,6 +1,6 @@
 <img width="2561" height="504" alt="635699500-3cd58b33-5635-4d3f-bf30-66942ee5d793" src="https://github.com/user-attachments/assets/2ed0083e-7209-4ee2-bd49-fc015479ace3" />
 
-<small> having any issues? reach out to me on discord! @ishowchugjug </small> 
+<sub> having any issues? reach out to me on discord! @ishowchugjug </sub> 
 
 larpaper is a fullscreen terminal screensaver built with Kitty, Terminal Text
 Effects, and swayidle.
