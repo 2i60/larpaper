@@ -74,9 +74,6 @@ Release archives include an uninstaller. Run:
 uninstall-larpaper
 ```
 
-You can also choose **Uninstall Larpaper** from the application menu. It opens
-a terminal, explains what will be removed, and asks for confirmation.
-
 This stops Larpaper and its idle watcher, then removes only files installed by
 the release. It does not remove source checkouts or unrelated Kitty, `tte`, or
 `swayidle` installations.
