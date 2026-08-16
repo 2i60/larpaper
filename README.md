@@ -5,6 +5,9 @@
 larpaper is a fullscreen terminal screensaver built with Kitty, Terminal Text
 Effects, and swayidle.
 
+## FYI
+this was made with KDE in mind, so most things are built around that, soon i'll work on availability for other distros like hyprland, GNOME, and more as time goes on. 
+
 ## Requirements
 
 - Bash
